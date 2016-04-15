@@ -1,0 +1,136 @@
+﻿<platformUi:DialogWindow x:Class="TFSUserManagement.AddUserDialog"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:TFSUserManagement"
+		xmlns:grid="clr-namespace:TFSUserManagement.Common.Grid"								
+		xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+		xmlns:converters="clr-namespace:TFSUserManagement.Converters"
+		xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
+		mc:Ignorable="d"
+		WindowStartupLocation="CenterOwner"
+		Width="650" Height="350">
+    <Window.Resources>
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Control.FontFamily" Value="Georgia"/>
+            <Setter Property="Control.FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="#333"/>
+        </Style>
+        <Style TargetType="ListViewItem">
+            <Setter Property="Height" Value="25" />
+            <Setter Property="Control.FontFamily" Value="Tahoma"/>
+            <Setter Property="Control.FontSize" Value="11"/>
+            <Setter Property="Control.Foreground" Value="#57890b"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+				 Value="True">
+                    <Setter Property="Control.Foreground" Value="White"/>
+                    <Setter Property="Background" Value="#57890b" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ToggleImageStyleBien" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <Image Name="img" Height="25" Width="25" Source="Resources/fav.png"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="ToggleButton.IsChecked" Value="True">
+                                <Setter TargetName="img" Property="Source" Value="Resources/nofav.png"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type Button}" x:Key="DisablerButton">
+            <Style.Triggers>
+                <DataTrigger 
+                     Binding ="{Binding ElementName=lbMembers, Path=SelectedIndex}" Value="-1">
+                    <Setter Property="Button.IsEnabled" Value="false"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <StackPanel Margin="0,0,0,1" >
+        <Grid Margin="5,0,5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="300"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350" />
+                <ColumnDefinition Width="280" />
+            </Grid.ColumnDefinitions>
+
+            <xctk:BusyIndicator 
+				Grid.Row="0" 
+				Grid.Column="0"                 
+				IsBusy="{Binding IsBusy}" 
+				BusyContent="{Binding BusyMessage}" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="269"/>
+                    </Grid.RowDefinitions>
+                    <xctk:WatermarkTextBox
+                        x:Name="UserFilter"
+                        Grid.Row="0"                         
+                        Text="{Binding Criteria, UpdateSourceTrigger=PropertyChanged}"
+                        Watermark="Type to filter users" />
+                    <ListBox 
+                        Grid.Row="1"
+						x:Name="lbMembers" 
+						ScrollViewer.HorizontalScrollBarVisibility="Auto"
+						ScrollViewer.VerticalScrollBarVisibility="Auto"
+						ItemsSource="{Binding AddUserCollection, Mode=TwoWay}" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25" />
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="150" />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding FullName}" />
+                                    <TextBlock Grid.Column="2" Text="{Binding UserName}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </xctk:BusyIndicator>
+            <xctk:WatermarkTextBox 
+				Grid.Row="0" 
+				Grid.Column="1"                                 
+				TextWrapping="Wrap"
+                Height="299"
+				Text="{Binding UserInput}"
+				Watermark="Enter comma(,) OR newline OR semicolon(;) separated user names" />
+            <Button 
+				x:Name="Adduser"
+				Grid.Row="1"
+				Grid.Column="0"
+				Grid.ColumnSpan="2"
+				Height="20" Width="100"
+				HorizontalAlignment="Right"
+                IsEnabled="{Binding}"
+				Command="{Binding AddUserCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Image 
+						Name="imgAdd"
+						Height="15" 
+						Width="25" 
+						HorizontalAlignment="Left" 
+						Source="./Resources/add.ico"/>
+                    <TextBlock Text="Add User(s)" TextAlignment="Right"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+    </StackPanel>
+</platformUi:DialogWindow>

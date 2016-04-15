@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="TFSUserManagement.ServerDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TFSUserManagement"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="75" d:DesignWidth="300">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            
+            <Grid Margin="5,5,5,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" 
+                       Grid.Column="0" 
+                       Content="Enter a Team Foundation Server URL:" />
+                <xctk:WatermarkTextBox
+                    x:Name="UserFilter"
+                    Width="150"
+                    Height="25"
+                    Grid.Row="1"
+                    Grid.Column="0"   
+                    HorizontalAlignment="Left"
+                    Text="{Binding TFSUrl, UpdateSourceTrigger=PropertyChanged}"
+                    Watermark="Enter TFS Server URL" />
+                <Button 
+				x:Name="AddServer"
+				Grid.Row="1"
+				Grid.Column="1"
+				Grid.ColumnSpan="2"
+				Height="20" Width="80"
+				HorizontalAlignment="Right"
+                    Content="Add Server"
+                IsEnabled="{Binding IsEnabled}"
+				Command="{Binding AddServer}"/>
+            </Grid>
+            
+        </StackPanel>  
+    </Grid>
+</UserControl>
