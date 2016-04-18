@@ -271,11 +271,11 @@ namespace TFSUserManagement.TFSData
         /// Function to fetch the TFS Server URL
         /// </summary>
         /// <returns></returns>
-        private static TFSServerViewModel GetTFSUrl()
-        {
-            return new TFSServerViewModel
+        private static TFSServer GetTFSUrl()
+        {                      
+            return new TFSServer
             {
-                TFSUrl = "http://tfs.cofunds.co.uk:8080/tfs",
+                TFSUrl = TFSServerViewModel.SavedServers(),
                 IsDefault = true
             };
         }

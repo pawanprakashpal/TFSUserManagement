@@ -97,9 +97,9 @@ namespace TFSUserManagement.ViewModel
         /// Constructor
         /// </summary>
         /// <param name="model"></param>
-        public AddUserViewModel(TfsUtilityViewModel model)
+        public AddUserViewModel(TfsUtilityViewModel model, IServiceProvider serviceProvider)
         {
-            this._iServiceProvider = model.ServiceProvider;
+            this._iServiceProvider = serviceProvider;
             AddUserCommand = new RelayCommand<object>(param => this.AddUser(param, model));
             this.FetchUser();
         }

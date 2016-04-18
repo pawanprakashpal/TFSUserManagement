@@ -93,13 +93,26 @@ namespace TFSUserManagement
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            GroupDialog xamlDialog = new GroupDialog()
+            dynamic xamlDialog;
+            if (string.IsNullOrEmpty(ViewModel.TFSServerViewModel.SavedServers()))
             {
-                Title = "Manage TFS User(s)",
-                HasMinimizeButton = false,
-                HasMaximizeButton = false
-            };
-            xamlDialog.ShowModal();            
+                xamlDialog = new ServerDialog(ServiceProvider)
+                {
+                    Title = Common.Constants.ADDSERVERTITLE,
+                    HasMaximizeButton = false,
+                    HasMinimizeButton = false
+                };
+            }
+            else
+            {
+                xamlDialog = new GroupDialog(ServiceProvider)
+                {
+                    Title = Common.Constants.GROUPTITLE,
+                    HasMaximizeButton = false,
+                    HasMinimizeButton = false
+                };
+            }
+            xamlDialog.ShowModal();
         }
     }
 }

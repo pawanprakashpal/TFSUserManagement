@@ -52,6 +52,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AddUserDialog.xaml.cs" />
+    <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\DelegateCommand.cs" />
     <Compile Include="Common\Extensions\ObservableExtension.cs" />
     <Compile Include="Common\Grid\GridViewSort.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Converters\BaseConverter.cs" />
     <Compile Include="Converters\DebuggingConverter.cs" />
     <Compile Include="Entities\TFSGroup.cs" />
+    <Compile Include="Entities\TFSServer.cs" />
     <Compile Include="Entities\TFSUser.cs" />
     <Compile Include="GroupDialog.xaml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -37,8 +37,9 @@ namespace TFSUserManagement.ViewModel
         /// <summary>
         /// Constructor
         /// </summary>
-        public TfsUtilityViewModel()
-        {            
+        public TfsUtilityViewModel(IServiceProvider serviceProvider)
+        {
+            this._iServiceProvider = serviceProvider;
             FavoriteCommand = new RelayCommand<object>(this.Favorite);
             RemoveUserCommand = new RelayCommand<object>(this.RemoveUser);
             OpenAddUserWindowCommand = new RelayCommand<object>(this.OpenDialog);
@@ -101,19 +102,7 @@ namespace TFSUserManagement.ViewModel
                 OnPropertyChanged();
             }
         }
-
-        public IServiceProvider ServiceProvider
-        {
-            get
-            {
-                return _iServiceProvider;
-            }
-            set
-            {
-                _iServiceProvider = value;
-            }
-        }
-
+        
         /// <summary>
         /// Selected Group of Grid
         /// </summary>
@@ -193,7 +182,7 @@ namespace TFSUserManagement.ViewModel
         /// <param name="param"></param>
         private void OpenDialog(object param)
         {
-            AddUserDialog xamlDialog = new AddUserDialog(this)
+            AddUserDialog xamlDialog = new AddUserDialog(this,this._iServiceProvider)
             {
                 Title = "Manage TFS Groups",
                 HasMinimizeButton = false,
@@ -211,18 +200,22 @@ namespace TFSUserManagement.ViewModel
             var result = this.Confirm(param != null ? 1 : this.Members.Count);
             if (result == 6)
             {
+                IsBusy = true;
                 if (param != null)
                 {
                     var groupMember = ((FrameworkElement)param).DataContext as GroupMembers;
+                    BusyMessage = $"Removing {groupMember.Name} from TFS Group '{this.SelectedItem.GroupName}'";
                     this.Remove(groupMember.Name);
                 }
                 else
                 {
                     this.Members.ToList().ForEach(user =>
                     {
+                        BusyMessage = $"Removing {user.Name} of {Members.Count} users from TFS Group '{this.SelectedItem.GroupName}'.";
                         this.Remove(user.Name);
                     });
                 }
+                IsBusy = false;
                 PreviousState = this.SelectedItem;
                 this.Refresh();
             }

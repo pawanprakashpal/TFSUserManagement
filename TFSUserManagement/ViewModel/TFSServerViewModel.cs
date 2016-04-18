@@ -3,74 +3,72 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using TFSUserManagement.Common;
+using TFSUserManagement.Entities;
 
 namespace TFSUserManagement.ViewModel
 {
     public class TFSServerViewModel : Base.ViewModelBase
     {
-        private string _tfsUrl;
-        private bool _isDefault;
-        private bool _isEnabled;
-
-        public bool IsEnabled
-        {
-            get { return _isEnabled; }
-            set { _isEnabled = value; OnPropertyChanged(); }
-        }
-        public bool IsDefault
-        {
-            get { return _isDefault; }
-            set
-            {
-                _isDefault = value;
-                OnPropertyChanged();
-            }
-        }
-        public string TFSUrl
-        {
-            get { return _tfsUrl; }
-            set
-            {
-                _tfsUrl = value;
-                OnPropertyChanged();
-            }
-        }
+        private IServiceProvider _serviceProvider;
+        public TFSServer TfsServer { get; set; } = new TFSServer();
+        /// <summary>
+        /// To Close the Add User Dialog
+        /// </summary>
+        public Action CloseAction { get; set; }
 
         /// <summary>
         /// Command to add ser to TFS Group
         /// </summary>
         public RelayCommand<object> AddServerCommand { get; private set; }
 
-        public TFSServerViewModel()
+        public TFSServerViewModel(IServiceProvider serviceProvider)
         {
+            this._serviceProvider = serviceProvider;
             AddServerCommand = new RelayCommand<object>(AddServer);
         }
 
         /// <summary>
-        /// To Save 
+        /// To Save server to json file
         /// </summary>
         /// <param name="obj"></param>
         private void AddServer(object obj)
         {
-            string json = JsonConvert.SerializeObject(this, Formatting.Indented);
-            File.WriteAllText(@"c:\user.json", json);
+            string json = JsonConvert.SerializeObject(this.TfsServer, Formatting.Indented);
+            File.WriteAllText(Constants.FILENAME, json);
+            //Close the Add Server dialog
+            CloseAction();
+            //Open the Group Dialog 
+            var xamlDialog = new GroupDialog(_serviceProvider)
+            {
+                Title = Constants.GROUPTITLE,
+                HasMaximizeButton = false,
+                HasMinimizeButton = false
+            };
+            xamlDialog.ShowModal();
         }
 
-        private void SavedServers()
+        /// <summary>
+        /// To Fetch the saved TFS Server
+        /// </summary>
+        /// <returns></returns>
+        public static string SavedServers()
         {
-            using (var fs = new FileStream(@"c:\user.json", FileMode.Open, FileAccess.Read))
+            var server = string.Empty;
+            if (File.Exists(Constants.FILENAME))
             {
-                using (var sr = new StreamReader(fs))
+                using (var fs = new FileStream(Constants.FILENAME, FileMode.Open, FileAccess.Read))
                 {
-                    using (var reader = new JsonTextReader(sr))
+                    using (var sr = new StreamReader(fs))
                     {
-                        if(reader.TokenType==JsonToken.StartObject)
+                        using (var reader = new JsonTextReader(sr))
                         {
-                            var obj = JObject.Load(reader);
+                            var json = JObject.Load(reader);
+                            server = json["TFSUrl"].ToString();
                         }
                     }
                 }
             }
+            return server;
         }
     }
 }
