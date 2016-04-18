@@ -18,6 +18,9 @@ namespace TFSUserManagement
             CenterWindowOnScreen();
         }
 
+        /// <summary>
+        /// To Position the window
+        /// </summary>
         private void CenterWindowOnScreen()
         {
             double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
