@@ -70,7 +70,8 @@
             <xctk:BusyIndicator 
 				Grid.Row="0" 
 				Grid.Column="0"                 
-				IsBusy="{Binding IsBusy}" 
+				IsBusy="{Binding IsBusy}"                 
+                
 				BusyContent="{Binding BusyMessage}" >
                 <Grid>
                     <Grid.RowDefinitions>

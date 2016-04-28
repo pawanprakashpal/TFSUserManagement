@@ -14,10 +14,10 @@ namespace TFSUserManagement
             InitializeComponent();
         }
 
-        public GroupDialog()
+        public GroupDialog(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            var model = new ViewModel.TfsUtilityViewModel();
+            var model = new ViewModel.TfsUtilityViewModel(serviceProvider);
             this.DataContext = model;
         }
 
